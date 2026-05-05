@@ -21,7 +21,6 @@ import com.illusivesoulworks.polymorph.api.common.base.IRecipePair;
 import java.util.Collection;
 import java.util.List;
 import java.util.SortedSet;
-import javax.annotation.Nonnull;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
@@ -30,6 +29,7 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
+import org.jspecify.annotations.NonNull;
 
 public interface IRecipeData<E> {
 
@@ -37,22 +37,22 @@ public interface IRecipeData<E> {
                                                                          I inventory, Level level,
                                                                          List<RecipeHolder<T>> recipes);
 
-  void selectRecipe(@Nonnull RecipeHolder<?> recipe);
+  void selectRecipe(@NonNull RecipeHolder<?> recipe);
 
   RecipeHolder<?> getSelectedRecipe();
 
   void setSelectedRecipe(RecipeHolder<?> recipe);
 
-  @Nonnull
+  @NonNull
   SortedSet<IRecipePair> getRecipesList();
 
-  void setRecipesList(@Nonnull SortedSet<IRecipePair> recipesList);
+  void setRecipesList(@NonNull SortedSet<IRecipePair> recipesList);
 
   Collection<ServerPlayer> getListeners();
 
-  void addListener(@Nonnull ServerPlayer player);
+  void addListener(@NonNull ServerPlayer player);
 
-  void removeListener(@Nonnull ServerPlayer player);
+  void removeListener(@NonNull ServerPlayer player);
 
   void clearListeners();
 
@@ -60,7 +60,7 @@ public interface IRecipeData<E> {
 
   E getOwner();
 
-  @Nonnull
+  @NonNull
   CompoundTag writeNBT(HolderLookup.Provider provider);
 
   void readNBT(HolderLookup.Provider provider, CompoundTag compound);

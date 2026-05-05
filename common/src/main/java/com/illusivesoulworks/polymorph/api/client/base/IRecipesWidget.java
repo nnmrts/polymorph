@@ -19,22 +19,23 @@ package com.illusivesoulworks.polymorph.api.client.base;
 
 import com.illusivesoulworks.polymorph.api.client.widgets.children.SelectionWidget;
 import com.illusivesoulworks.polymorph.api.common.base.IRecipePair;
-import java.util.Set;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.inventory.Slot;
+
+import java.util.Set;
 
 public interface IRecipesWidget {
 
   void initChildWidgets();
 
-  void selectRecipe(ResourceLocation resourceLocation);
+  void selectRecipe(Identifier resourceLocation);
 
-  void highlightRecipe(ResourceLocation resourceLocation);
+  void highlightRecipe(Identifier resourceLocation);
 
-  void setRecipesList(Set<IRecipePair> recipesList, ResourceLocation selected);
+  void setRecipesList(Set<IRecipePair> recipesList, Identifier selected);
 
-  void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float renderPartialTicks);
+  void extractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float renderPartialTicks);
 
   boolean mouseClicked(double mouseX, double mouseY, int button);
 

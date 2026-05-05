@@ -18,23 +18,24 @@
 package com.illusivesoulworks.polymorph.common.util;
 
 import com.illusivesoulworks.polymorph.api.common.base.IRecipePair;
-import java.util.Objects;
-import javax.annotation.Nonnull;
 import net.minecraft.core.DefaultedRegistry;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
-public record RecipePair(ResourceLocation resourceLocation,
+import javax.annotation.Nonnull;
+import java.util.Objects;
+
+public record RecipePair(Identifier resourceLocation,
                          ItemStack output) implements IRecipePair {
 
   public static final StreamCodec<RegistryFriendlyByteBuf, IRecipePair> STREAM_CODEC =
       StreamCodec.composite(
-          ResourceLocation.STREAM_CODEC,
+          Identifier.STREAM_CODEC,
           IRecipePair::getResourceLocation,
           ItemStack.STREAM_CODEC,
           IRecipePair::getOutput,
@@ -46,7 +47,7 @@ public record RecipePair(ResourceLocation resourceLocation,
   }
 
   @Override
-  public ResourceLocation getResourceLocation() {
+  public Identifier getResourceLocation() {
     return resourceLocation;
   }
 

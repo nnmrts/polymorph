@@ -20,22 +20,22 @@ package com.illusivesoulworks.polymorph.api.client.widgets.children;
 import com.illusivesoulworks.polymorph.api.common.base.IRecipePair;
 import com.illusivesoulworks.polymorph.platform.Services;
 import com.mojang.datafixers.util.Pair;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.function.Consumer;
-import javax.annotation.Nonnull;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.function.Consumer;
 
 public class SelectionWidget implements Renderable, GuiEventListener {
 
-  private final Consumer<ResourceLocation> onSelect;
+  private final Consumer<Identifier> onSelect;
   private final AbstractContainerScreen<?> containerScreen;
   private final List<OutputWidget> outputWidgets = new ArrayList<>();
   private final Pair<WidgetSprites, WidgetSprites> sprites;
@@ -51,7 +51,7 @@ public class SelectionWidget implements Renderable, GuiEventListener {
 
   public SelectionWidget(int x, int y, int xOffset, int yOffset,
                          Pair<WidgetSprites, WidgetSprites> sprites,
-                         Consumer<ResourceLocation> onSelect,
+                         Consumer<Identifier> onSelect,
                          AbstractContainerScreen<?> containerScreen) {
     this.setPosition(x, y);
     this.onSelect = onSelect;
@@ -72,7 +72,7 @@ public class SelectionWidget implements Renderable, GuiEventListener {
     this.yOffset = y;
   }
 
-  public void highlightButton(ResourceLocation resourceLocation) {
+  public void highlightButton(Identifier resourceLocation) {
     this.outputWidgets.forEach(
         widget -> widget.setHighlighted(widget.getResourceLocation().equals(resourceLocation)));
   }
@@ -113,7 +113,7 @@ public class SelectionWidget implements Renderable, GuiEventListener {
     return this.active;
   }
 
-  public void renderTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+  public void renderTooltip(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
     Minecraft mc = Minecraft.getInstance();
 
     if (mc.screen != null && this.hoveredButton != null) {
@@ -123,8 +123,7 @@ public class SelectionWidget implements Renderable, GuiEventListener {
   }
 
   @Override
-  public void render(@Nonnull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
-
+  public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
     if (this.isActive()) {
       int x = Services.CLIENT_PLATFORM.getScreenLeft(this.containerScreen) + this.xOffset;
       int y = Services.CLIENT_PLATFORM.getScreenTop(this.containerScreen) + this.yOffset;
@@ -136,13 +135,13 @@ public class SelectionWidget implements Renderable, GuiEventListener {
       }
       this.hoveredButton = null;
       this.outputWidgets.forEach(button -> {
-        button.render(guiGraphics, mouseX, mouseY, partialTicks);
+        button.extractRenderState(graphics, mouseX, mouseY, partialTicks);
 
         if (button.visible && button.isHoveredOrFocused()) {
           this.hoveredButton = button;
         }
       });
-      this.renderTooltip(guiGraphics, mouseX, mouseY);
+      this.renderTooltip(graphics, mouseX, mouseY);
     }
   }
 

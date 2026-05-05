@@ -19,7 +19,7 @@ package com.illusivesoulworks.polymorph.client;
 
 import com.illusivesoulworks.polymorph.api.client.base.ITickingRecipesWidget;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 
@@ -43,12 +43,12 @@ public class PolymorphClientEvents {
     }
   }
 
-  public static void render(Screen screen, GuiGraphics guiGraphics, int mouseX, int mouseY,
+  public static void extract(Screen screen, GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY,
                             float partialTicks) {
 
     if (screen instanceof AbstractContainerScreen) {
       RecipesWidget.get().ifPresent(
-          recipeController -> recipeController.render(guiGraphics, mouseX, mouseY, partialTicks));
+          recipeController -> recipeController.extractRenderState(guiGraphics, mouseX, mouseY, partialTicks));
     }
   }
 

@@ -1,17 +1,18 @@
 package com.illusivesoulworks.polymorph.common.network.server;
 
 import com.illusivesoulworks.polymorph.api.PolymorphApi;
-import javax.annotation.Nonnull;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
+
+import javax.annotation.Nonnull;
 
 public record SPacketRecipeHandshake() implements CustomPacketPayload {
 
   public static final CustomPacketPayload.Type<SPacketRecipeHandshake> TYPE =
       new CustomPacketPayload.Type<>(
-          ResourceLocation.fromNamespaceAndPath(PolymorphApi.MOD_ID, "recipe_handshake"));
+          Identifier.fromNamespaceAndPath(PolymorphApi.MOD_ID, "recipe_handshake"));
 
   public static final SPacketRecipeHandshake INSTANCE = new SPacketRecipeHandshake();
 

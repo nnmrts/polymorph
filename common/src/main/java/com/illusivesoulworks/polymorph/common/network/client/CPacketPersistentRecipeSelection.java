@@ -20,29 +20,30 @@ package com.illusivesoulworks.polymorph.common.network.client;
 import com.illusivesoulworks.polymorph.api.PolymorphApi;
 import com.illusivesoulworks.polymorph.api.common.capability.IBlockEntityRecipeData;
 import com.illusivesoulworks.polymorph.common.integration.PolymorphIntegrations;
-import java.util.Optional;
-import javax.annotation.Nonnull;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 
-public record CPacketPersistentRecipeSelection(ResourceLocation recipe) implements
+import javax.annotation.Nonnull;
+import java.util.Optional;
+
+public record CPacketPersistentRecipeSelection(Identifier recipe) implements
     CustomPacketPayload {
 
   public static final Type<CPacketPersistentRecipeSelection> TYPE =
-      new Type<>(ResourceLocation.fromNamespaceAndPath(PolymorphApi.MOD_ID,
+      new Type<>(Identifier.fromNamespaceAndPath(PolymorphApi.MOD_ID,
           "persistent_recipe_selection"));
   public static final StreamCodec<FriendlyByteBuf, CPacketPersistentRecipeSelection> STREAM_CODEC =
       StreamCodec.composite(
-          ResourceLocation.STREAM_CODEC,
+          Identifier.STREAM_CODEC,
           CPacketPersistentRecipeSelection::recipe,
           CPacketPersistentRecipeSelection::new);
 

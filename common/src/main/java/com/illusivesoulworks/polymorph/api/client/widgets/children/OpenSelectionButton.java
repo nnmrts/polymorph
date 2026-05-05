@@ -18,8 +18,7 @@
 package com.illusivesoulworks.polymorph.api.client.widgets.children;
 
 import com.illusivesoulworks.polymorph.platform.Services;
-import javax.annotation.Nonnull;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -44,10 +43,9 @@ public class OpenSelectionButton extends ImageButton {
   }
 
   @Override
-  public void renderWidget(@Nonnull GuiGraphics guiGraphics, int mouseX, int mouseY,
-                           float partialTicks) {
+  public void extractContents(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
     this.setX(Services.CLIENT_PLATFORM.getScreenLeft(this.containerScreen) + this.xOffset);
     this.setY(Services.CLIENT_PLATFORM.getScreenTop(this.containerScreen) + this.yOffset);
-    super.renderWidget(guiGraphics, mouseX, mouseY, partialTicks);
+    super.extractContents(graphics, mouseX, mouseY, a);
   }
 }

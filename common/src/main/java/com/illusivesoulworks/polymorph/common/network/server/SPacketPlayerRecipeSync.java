@@ -20,28 +20,29 @@ package com.illusivesoulworks.polymorph.common.network.server;
 import com.illusivesoulworks.polymorph.api.PolymorphApi;
 import com.illusivesoulworks.polymorph.api.common.base.IRecipePair;
 import com.illusivesoulworks.polymorph.common.util.RecipePair;
-import java.util.HashSet;
-import java.util.Optional;
-import javax.annotation.Nonnull;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
+
+import javax.annotation.Nonnull;
+import java.util.HashSet;
+import java.util.Optional;
 
 public record SPacketPlayerRecipeSync(Optional<HashSet<IRecipePair>> recipeList,
-                                      Optional<ResourceLocation> selected)
+                                      Optional<Identifier> selected)
     implements CustomPacketPayload {
 
   public static final Type<SPacketPlayerRecipeSync> TYPE =
-      new Type<>(ResourceLocation.fromNamespaceAndPath(PolymorphApi.MOD_ID, "recipe_sync"));
+      new Type<>(Identifier.fromNamespaceAndPath(PolymorphApi.MOD_ID, "recipe_sync"));
 
   public static final StreamCodec<RegistryFriendlyByteBuf, SPacketPlayerRecipeSync> STREAM_CODEC =
       StreamCodec.composite(
           ByteBufCodecs.optional(
               RecipePair.STREAM_CODEC.apply(ByteBufCodecs.collection(HashSet::new))),
           SPacketPlayerRecipeSync::recipeList,
-          ByteBufCodecs.optional(ResourceLocation.STREAM_CODEC),
+          ByteBufCodecs.optional(Identifier.STREAM_CODEC),
           SPacketPlayerRecipeSync::selected,
           SPacketPlayerRecipeSync::new);
 

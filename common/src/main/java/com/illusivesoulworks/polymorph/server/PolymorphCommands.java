@@ -25,38 +25,29 @@ import com.illusivesoulworks.polymorph.server.wrapper.SmithingRecipeWrapper;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.StringJoiner;
-import java.util.TreeSet;
-import java.util.concurrent.CompletableFuture;
-import java.util.function.Function;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.item.crafting.CustomRecipe;
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.item.crafting.RecipeInput;
-import net.minecraft.world.item.crafting.RecipeManager;
-import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.server.permissions.Permissions;
+import net.minecraft.world.item.crafting.*;
+
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Function;
 
 public class PolymorphCommands {
 
   public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
     final int opPermissionLevel = 2;
     LiteralArgumentBuilder<CommandSourceStack> command = Commands.literal("polymorph")
-        .requires(player -> player.hasPermission(opPermissionLevel));
+        .requires(player -> player.permissions().hasPermission(Permissions.COMMANDS_GAMEMASTER));
     command.then(
         Commands.literal("conflicts").executes(context -> findConflicts(context.getSource())));
     dispatcher.register(command);
@@ -114,9 +105,9 @@ public class PolymorphCommands {
         pRecipeManager.getRecipes().stream()
             .filter(holder -> holder.value().getType() == pType)
             .map(h -> pFactory.apply((RecipeHolder<?>) h)).toList();
-    List<Set<ResourceLocation>> conflicts = new ArrayList<>();
-    Set<ResourceLocation> skipped = new TreeSet<>();
-    Set<ResourceLocation> processed = new HashSet<>();
+    List<Set<Identifier>> conflicts = new ArrayList<>();
+    Set<Identifier> skipped = new TreeSet<>();
+    Set<Identifier> processed = new HashSet<>();
 
     int totalRecipes = recipes.size();
     pSource.sendSuccess(() -> Component.translatable("commands.polymorph.conflicts.scanning", totalRecipes, pLabel), true);
@@ -125,7 +116,7 @@ public class PolymorphCommands {
     int lastReportedPercent = 0;
 
     for (RecipeWrapper recipe : recipes) {
-      ResourceLocation id = recipe.getId();
+      Identifier id = recipe.getId();
       checked++;
 
       // Report progress every 10%
@@ -146,7 +137,7 @@ public class PolymorphCommands {
         skipped.add(id);
         continue;
       }
-      Set<ResourceLocation> currentGroup = new TreeSet<>();
+      Set<Identifier> currentGroup = new TreeSet<>();
 
       for (RecipeWrapper otherRecipe : recipes) {
 
@@ -173,9 +164,9 @@ public class PolymorphCommands {
     pOutput.add("");
     int count = 1;
 
-    for (Set<ResourceLocation> conflict : conflicts) {
+    for (Set<Identifier> conflict : conflicts) {
       StringJoiner joiner = new StringJoiner(", ");
-      conflict.stream().map(ResourceLocation::toString).forEach(joiner::add);
+      conflict.stream().map(Identifier::toString).forEach(joiner::add);
       pOutput.add(count + ": " + joiner);
       pOutput.add("");
       count++;
@@ -184,7 +175,7 @@ public class PolymorphCommands {
     if (!skipped.isEmpty()) {
       pOutput.add("Skipped special recipes: ");
 
-      for (ResourceLocation resourceLocation : skipped) {
+      for (Identifier resourceLocation : skipped) {
         pOutput.add(resourceLocation.toString());
       }
       pOutput.add("");

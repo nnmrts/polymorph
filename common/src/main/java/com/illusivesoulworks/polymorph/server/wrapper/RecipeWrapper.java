@@ -1,12 +1,12 @@
 package com.illusivesoulworks.polymorph.server.wrapper;
 
-import java.util.ArrayList;
-import java.util.List;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.item.crafting.display.SlotDisplay;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class RecipeWrapper {
 
@@ -31,8 +31,8 @@ public class RecipeWrapper {
     return this.recipe.value();
   }
 
-  public ResourceLocation getId() {
-    return this.recipe.id().location();
+  public Identifier getId() {
+    return this.recipe.id().identifier();
   }
 
   public List<IngredientWrapper> getIngredients() {

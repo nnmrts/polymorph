@@ -19,7 +19,7 @@ package com.illusivesoulworks.polymorph.api.client.base;
 
 import com.illusivesoulworks.polymorph.api.PolymorphApi;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public abstract class PersistentRecipesWidget extends AbstractRecipesWidget {
 
@@ -28,7 +28,7 @@ public abstract class PersistentRecipesWidget extends AbstractRecipesWidget {
   }
 
   @Override
-  public void selectRecipe(ResourceLocation resourceLocation) {
+  public void selectRecipe(Identifier resourceLocation) {
     PolymorphApi.getInstance().getNetwork().sendPersistentRecipeSelectionC2S(resourceLocation);
   }
 }

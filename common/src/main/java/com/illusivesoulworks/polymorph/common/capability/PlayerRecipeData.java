@@ -22,10 +22,7 @@ import com.illusivesoulworks.polymorph.api.common.base.IRecipePair;
 import com.illusivesoulworks.polymorph.api.common.capability.IPlayerRecipeData;
 import com.illusivesoulworks.polymorph.client.RecipesWidget;
 import com.mojang.datafixers.util.Pair;
-import java.util.List;
-import java.util.SortedSet;
-import javax.annotation.Nonnull;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -35,6 +32,10 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
+
+import javax.annotation.Nonnull;
+import java.util.List;
+import java.util.SortedSet;
 
 public class PlayerRecipeData extends AbstractRecipeData<Player> implements
     IPlayerRecipeData {
@@ -96,8 +97,8 @@ public class PlayerRecipeData extends AbstractRecipeData<Player> implements
   private void syncPlayerRecipeData() {
 
     if (this.getOwner() instanceof ServerPlayer) {
-      ResourceLocation resourceLocation =
-          this.getSelectedRecipe() != null ? this.getSelectedRecipe().id().location() : null;
+      Identifier resourceLocation =
+          this.getSelectedRecipe() != null ? this.getSelectedRecipe().id().identifier() : null;
       PolymorphApi.getInstance().getNetwork()
           .sendPlayerSyncS2C((ServerPlayer) this.getOwner(), this.getRecipesList(),
               resourceLocation);
@@ -108,9 +109,9 @@ public class PlayerRecipeData extends AbstractRecipeData<Player> implements
   public void sendRecipesListToListeners() {
 
     if (this.getContainerMenu() == this.getOwner().containerMenu) {
-      ResourceLocation resourceLocation =
-          this.getSelectedRecipe() != null ? this.getSelectedRecipe().id().location() : null;
-      Pair<SortedSet<IRecipePair>, ResourceLocation> packetData =
+      Identifier resourceLocation =
+          this.getSelectedRecipe() != null ? this.getSelectedRecipe().id().identifier() : null;
+      Pair<SortedSet<IRecipePair>, Identifier> packetData =
           new Pair<>(this.getRecipesList(), resourceLocation);
       Player player = this.getOwner();
 

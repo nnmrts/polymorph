@@ -17,25 +17,26 @@
 
 package com.illusivesoulworks.polymorph.api.common.base;
 
-import java.util.SortedSet;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
+
+import java.util.SortedSet;
 
 public interface IPolymorphNetwork {
 
-  void sendPlayerRecipeSelectionC2S(ResourceLocation resourceLocation);
+  void sendPlayerRecipeSelectionC2S(Identifier resourceLocation);
 
-  void sendPersistentRecipeSelectionC2S(ResourceLocation resourceLocation);
+  void sendPersistentRecipeSelectionC2S(Identifier resourceLocation);
 
   void sendRecipesListS2C(ServerPlayer player);
 
   void sendRecipesListS2C(ServerPlayer player, SortedSet<IRecipePair> recipesList);
 
   void sendRecipesListS2C(ServerPlayer player, SortedSet<IRecipePair> recipesList,
-                          ResourceLocation selected);
+                          Identifier selected);
 
   void sendPlayerSyncS2C(ServerPlayer player, SortedSet<IRecipePair> recipesList,
-                         ResourceLocation selected);
+                         Identifier selected);
 
   void sendBlockEntityListenerC2S(boolean add);
 

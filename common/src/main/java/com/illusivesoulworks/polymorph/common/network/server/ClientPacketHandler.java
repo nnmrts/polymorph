@@ -25,15 +25,16 @@ import com.illusivesoulworks.polymorph.api.common.capability.IPlayerRecipeData;
 import com.illusivesoulworks.polymorph.client.RecipesWidget;
 import com.illusivesoulworks.polymorph.common.integration.util.RecipeTransfer;
 import com.illusivesoulworks.polymorph.mixin.core.AccessorSmithingScreen;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.SortedSet;
-import java.util.TreeSet;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.SmithingScreen;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
+
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 public class ClientPacketHandler {
 
@@ -92,7 +93,7 @@ public class ClientPacketHandler {
 
   public static void handle(SPacketRecipeHandshake unused) {
     IRecipesWidget widget = PolymorphWidgets.getInstance().getCurrentWidget();
-    ResourceLocation resourceLocation = RecipeTransfer.getTransfer();
+    Identifier resourceLocation = RecipeTransfer.getTransfer();
 
     if (widget != null && resourceLocation != null) {
       widget.selectRecipe(resourceLocation);

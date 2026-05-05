@@ -26,7 +26,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -35,7 +35,7 @@ public record CPacketBlockEntityListener(boolean add) implements CustomPacketPay
 
   public static final Type<CPacketBlockEntityListener> TYPE =
       new Type<>(
-          ResourceLocation.fromNamespaceAndPath(PolymorphApi.MOD_ID, "block_entity_listener"));
+          Identifier.fromNamespaceAndPath(PolymorphApi.MOD_ID, "block_entity_listener"));
   public static final StreamCodec<FriendlyByteBuf, CPacketBlockEntityListener> STREAM_CODEC =
       StreamCodec.composite(
           ByteBufCodecs.BOOL,
@@ -53,11 +53,11 @@ public record CPacketBlockEntityListener(boolean add) implements CustomPacketPay
 
         if (recipeData != null) {
           BlockEntityTicker.add(player, recipeData);
-          ResourceLocation resourceLocation = null;
+          Identifier resourceLocation = null;
           RecipeHolder<?> recipeHolder = recipeData.getSelectedRecipe();
 
           if (recipeHolder != null) {
-            resourceLocation = recipeHolder.id().location();
+            resourceLocation = recipeHolder.id().identifier();
           }
           api.getNetwork().sendRecipesListS2C(player,
               recipeData.isEmpty() ? new TreeSet<>() : recipeData.getRecipesList(),

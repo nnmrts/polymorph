@@ -22,33 +22,20 @@ import com.illusivesoulworks.polymorph.api.common.base.IRecipePair;
 import com.illusivesoulworks.polymorph.api.common.capability.IRecipeData;
 import com.illusivesoulworks.polymorph.common.util.RecipePair;
 import com.mojang.datafixers.util.Pair;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
-import java.util.UUID;
-import javax.annotation.Nonnull;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.CustomRecipe;
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.item.crafting.RecipeInput;
-import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.NotNull;
+
+import javax.annotation.Nonnull;
+import java.util.*;
 
 public abstract class AbstractRecipeData<E> implements IRecipeData<E> {
 
@@ -58,7 +45,7 @@ public abstract class AbstractRecipeData<E> implements IRecipeData<E> {
   private final Map<UUID, ServerPlayer> listeners;
 
   private RecipeHolder<?> selectedRecipe;
-  protected ResourceLocation loadedRecipe;
+  protected Identifier loadedRecipe;
 
   public AbstractRecipeData(E owner) {
     this.recipesList = new TreeSet<>();
@@ -92,7 +79,7 @@ public abstract class AbstractRecipeData<E> implements IRecipeData<E> {
 
     for (RecipeHolder<T> entry : recipes) {
       T recipe = entry.value();
-      ResourceLocation id = entry.id().location();
+      Identifier id = entry.id().identifier();
       // Get the output from the recipe result display
       ItemStack output = ItemStack.EMPTY;
       var display = entry.value().display();
@@ -101,13 +88,14 @@ public abstract class AbstractRecipeData<E> implements IRecipeData<E> {
         if (resultDisplay instanceof net.minecraft.world.item.crafting.display.SlotDisplay.ItemSlotDisplay itemDisplay) {
           output = new ItemStack(itemDisplay.item().value());
         } else if (resultDisplay instanceof net.minecraft.world.item.crafting.display.SlotDisplay.ItemStackSlotDisplay stackDisplay) {
-          output = stackDisplay.stack();
+          //TODO
+          output = stackDisplay.stack().create();
         }
       }
 
       // noinspection ConstantConditions
       if (output == null || output.isEmpty() || entry.value() instanceof CustomRecipe) {
-        output = recipe.assemble(recipeInput, registryAccess);
+        output = recipe.assemble(recipeInput);
       }
 
       if (output.isEmpty()) {
@@ -120,7 +108,7 @@ public abstract class AbstractRecipeData<E> implements IRecipeData<E> {
       boolean flag = false;
 
       if (selected == null && this.getSelectedRecipe() != null &&
-          this.getSelectedRecipe().id().location().equals(id)) {
+          this.getSelectedRecipe().id().identifier().equals(id)) {
         selected = entry;
         flag = true;
       }
@@ -186,7 +174,7 @@ public abstract class AbstractRecipeData<E> implements IRecipeData<E> {
   }
 
   @Override
-  public void removeListener(@NotNull ServerPlayer serverPlayer) {
+  public void removeListener(@Nonnull ServerPlayer serverPlayer) {
     this.listeners.remove(serverPlayer.getUUID());
   }
 
@@ -197,9 +185,9 @@ public abstract class AbstractRecipeData<E> implements IRecipeData<E> {
 
   @Override
   public void sendRecipesListToListeners() {
-    ResourceLocation resourceLocation =
-        this.getSelectedRecipe() != null ? this.getSelectedRecipe().id().location() : null;
-    Pair<SortedSet<IRecipePair>, ResourceLocation> packetData =
+    Identifier resourceLocation =
+        this.getSelectedRecipe() != null ? this.getSelectedRecipe().id().identifier() : null;
+    Pair<SortedSet<IRecipePair>, Identifier> packetData =
         new Pair<>(this.getRecipesList(), resourceLocation);
 
     for (ServerPlayer listener : this.getListeners()) {
@@ -213,7 +201,7 @@ public abstract class AbstractRecipeData<E> implements IRecipeData<E> {
 
     if (compoundTag.contains("SelectedRecipe")) {
       compoundTag.getString("SelectedRecipe").ifPresent(str ->
-          this.loadedRecipe = ResourceLocation.tryParse(str));
+          this.loadedRecipe = Identifier.tryParse(str));
     }
   }
 
@@ -223,7 +211,7 @@ public abstract class AbstractRecipeData<E> implements IRecipeData<E> {
     CompoundTag nbt = new CompoundTag();
 
     if (this.selectedRecipe != null) {
-      nbt.putString("SelectedRecipe", this.selectedRecipe.id().location().toString());
+      nbt.putString("SelectedRecipe", this.selectedRecipe.id().identifier().toString());
     }
     return nbt;
   }

@@ -19,21 +19,22 @@ package com.illusivesoulworks.polymorph.api.client.widgets.children;
 
 import com.illusivesoulworks.polymorph.api.common.base.IRecipePair;
 import com.mojang.datafixers.util.Pair;
-import javax.annotation.Nonnull;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
+
+import javax.annotation.Nonnull;
 
 public class OutputWidget extends AbstractWidget {
 
   private final ItemStack output;
-  private final ResourceLocation resourceLocation;
+  private final Identifier resourceLocation;
   private final Pair<WidgetSprites, WidgetSprites> sprites;
   private boolean highlighted = false;
 
@@ -45,28 +46,27 @@ public class OutputWidget extends AbstractWidget {
   }
 
   @Override
-  public void renderWidget(@Nonnull GuiGraphics guiGraphics, int mouseX, int mouseY,
-                           float partialTicks) {
+  protected void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float a) {
     Minecraft minecraft = Minecraft.getInstance();
     WidgetSprites sprite = this.highlighted ? this.sprites.getSecond() : this.sprites.getFirst();
-    ResourceLocation texture = sprite.enabled();
+    Identifier texture = sprite.enabled();
 
     if (this.getX() + 25 > mouseX && this.getX() <= mouseX &&
-        this.getY() + 25 > mouseY && this.getY() <= mouseY) {
+            this.getY() + 25 > mouseY && this.getY() <= mouseY) {
       texture = sprite.enabledFocused();
     }
     guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, texture, this.getX(), this.getY(), this.width, this.height);
     int k = 4;
-    guiGraphics.renderItem(this.getOutput(), this.getX() + k, this.getY() + k);
-    guiGraphics.renderItemDecorations(minecraft.font, this.getOutput(), this.getX() + k,
-        this.getY() + k);
+    guiGraphics.item(this.getOutput(), this.getX() + k, this.getY() + k);
+    guiGraphics.itemDecorations(minecraft.font, this.getOutput(), this.getX() + k,
+            this.getY() + k);
   }
 
   public ItemStack getOutput() {
     return this.output;
   }
 
-  public ResourceLocation getResourceLocation() {
+  public Identifier getResourceLocation() {
     return this.resourceLocation;
   }
 

@@ -21,29 +21,28 @@ import com.illusivesoulworks.polymorph.api.PolymorphApi;
 import com.illusivesoulworks.polymorph.api.client.PolymorphWidgets;
 import com.illusivesoulworks.polymorph.api.client.base.IRecipesWidget;
 import com.illusivesoulworks.polymorph.api.client.base.PersistentRecipesWidget;
-import com.illusivesoulworks.polymorph.api.client.widgets.PlayerRecipesWidget;
 import com.illusivesoulworks.polymorph.api.common.base.IRecipePair;
 import com.mojang.datafixers.util.Pair;
-import java.util.Optional;
-import java.util.SortedSet;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.inventory.Slot;
+import net.minecraft.resources.Identifier;
+
+import java.util.Optional;
+import java.util.SortedSet;
 
 public class RecipesWidget {
 
   private static IRecipesWidget widget = null;
   private static Screen lastScreen = null;
-  private static Pair<SortedSet<IRecipePair>, ResourceLocation> pendingData = null;
+  private static Pair<SortedSet<IRecipePair>, Identifier> pendingData = null;
 
   public static Optional<IRecipesWidget> get() {
     return Optional.ofNullable(widget);
   }
 
   public static void enqueueRecipesList(SortedSet<IRecipePair> recipesList,
-                                        ResourceLocation resourceLocation) {
+                                        Identifier resourceLocation) {
     pendingData = new Pair<>(recipesList, resourceLocation);
   }
 

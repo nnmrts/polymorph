@@ -23,25 +23,26 @@ import com.illusivesoulworks.polymorph.api.client.widgets.children.SelectionWidg
 import com.illusivesoulworks.polymorph.api.common.base.IRecipePair;
 import com.illusivesoulworks.polymorph.platform.Services;
 import com.mojang.datafixers.util.Pair;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.components.WidgetSprites;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.resources.Identifier;
+
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.WidgetSprites;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.resources.ResourceLocation;
 
 public abstract class AbstractRecipesWidget implements IRecipesWidget {
 
   public static final WidgetSprites OUTPUT =
-      new WidgetSprites(ResourceLocation.fromNamespaceAndPath(PolymorphApi.MOD_ID, "output_button"),
-          ResourceLocation.fromNamespaceAndPath(PolymorphApi.MOD_ID, "output_button_highlighted"));
+      new WidgetSprites(Identifier.fromNamespaceAndPath(PolymorphApi.MOD_ID, "output_button"),
+          Identifier.fromNamespaceAndPath(PolymorphApi.MOD_ID, "output_button_highlighted"));
   public static final WidgetSprites CURRENT_OUTPUT = new WidgetSprites(
-      ResourceLocation.fromNamespaceAndPath(PolymorphApi.MOD_ID, "current_output"),
-      ResourceLocation.fromNamespaceAndPath(PolymorphApi.MOD_ID, "current_output_highlighted"));
+      Identifier.fromNamespaceAndPath(PolymorphApi.MOD_ID, "current_output"),
+      Identifier.fromNamespaceAndPath(PolymorphApi.MOD_ID, "current_output_highlighted"));
   public static final WidgetSprites SELECTOR = new WidgetSprites(
-      ResourceLocation.fromNamespaceAndPath(PolymorphApi.MOD_ID, "selector_button"),
-      ResourceLocation.fromNamespaceAndPath(PolymorphApi.MOD_ID, "selector_button_highlighted"));
+      Identifier.fromNamespaceAndPath(PolymorphApi.MOD_ID, "selector_button"),
+      Identifier.fromNamespaceAndPath(PolymorphApi.MOD_ID, "selector_button_highlighted"));
   public static final int BUTTON_X_OFFSET = 0;
   public static final int BUTTON_Y_OFFSET = -22;
   public static final int WIDGET_X_OFFSET = -4;
@@ -95,7 +96,7 @@ public abstract class AbstractRecipesWidget implements IRecipesWidget {
   }
 
   @Override
-  public abstract void selectRecipe(ResourceLocation resourceLocation);
+  public abstract void selectRecipe(Identifier resourceLocation);
 
   @Override
   public SelectionWidget getSelectionWidget() {
@@ -103,12 +104,12 @@ public abstract class AbstractRecipesWidget implements IRecipesWidget {
   }
 
   @Override
-  public void highlightRecipe(ResourceLocation resourceLocation) {
+  public void highlightRecipe(Identifier resourceLocation) {
     this.selectionWidget.highlightButton(resourceLocation);
   }
 
   @Override
-  public void setRecipesList(Set<IRecipePair> recipesList, ResourceLocation selected) {
+  public void setRecipesList(Set<IRecipePair> recipesList, Identifier selected) {
     SortedSet<IRecipePair> sorted = new TreeSet<>(recipesList);
     this.selectionWidget.setRecipeList(sorted);
     this.openButton.visible = recipesList.size() > 1;
@@ -119,9 +120,9 @@ public abstract class AbstractRecipesWidget implements IRecipesWidget {
   }
 
   @Override
-  public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float renderPartialTicks) {
-    this.selectionWidget.render(guiGraphics, mouseX, mouseY, renderPartialTicks);
-    this.openButton.render(guiGraphics, mouseX, mouseY, renderPartialTicks);
+  public void extractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float renderPartialTicks) {
+    this.selectionWidget.extractRenderState(guiGraphics, mouseX, mouseY, renderPartialTicks);
+    this.openButton.extractRenderState(guiGraphics, mouseX, mouseY, renderPartialTicks);
   }
 
   @Override

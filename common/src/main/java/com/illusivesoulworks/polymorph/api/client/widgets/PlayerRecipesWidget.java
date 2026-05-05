@@ -20,6 +20,7 @@ package com.illusivesoulworks.polymorph.api.client.widgets;
 import com.illusivesoulworks.polymorph.api.PolymorphApi;
 import com.illusivesoulworks.polymorph.api.client.base.AbstractRecipesWidget;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.Slot;
 
@@ -33,7 +34,7 @@ public class PlayerRecipesWidget extends AbstractRecipesWidget {
   }
 
   @Override
-  public void selectRecipe(ResourceLocation resourceLocation) {
+  public void selectRecipe(Identifier resourceLocation) {
     PolymorphApi api = PolymorphApi.getInstance();
     // Send the selection to the server - server handles the actual recipe selection
     api.getNetwork().sendPlayerRecipeSelectionC2S(resourceLocation);

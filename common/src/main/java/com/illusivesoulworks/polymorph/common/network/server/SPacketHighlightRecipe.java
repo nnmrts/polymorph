@@ -18,19 +18,20 @@
 package com.illusivesoulworks.polymorph.common.network.server;
 
 import com.illusivesoulworks.polymorph.api.PolymorphApi;
-import javax.annotation.Nonnull;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
-public record SPacketHighlightRecipe(ResourceLocation recipe) implements CustomPacketPayload {
+import javax.annotation.Nonnull;
+
+public record SPacketHighlightRecipe(Identifier recipe) implements CustomPacketPayload {
 
   public static final Type<SPacketHighlightRecipe> TYPE =
-      new Type<>(ResourceLocation.fromNamespaceAndPath(PolymorphApi.MOD_ID, "highlight_recipe"));
+      new Type<>(Identifier.fromNamespaceAndPath(PolymorphApi.MOD_ID, "highlight_recipe"));
   public static final StreamCodec<FriendlyByteBuf, SPacketHighlightRecipe> STREAM_CODEC =
       StreamCodec.composite(
-          ResourceLocation.STREAM_CODEC,
+          Identifier.STREAM_CODEC,
           SPacketHighlightRecipe::recipe,
           SPacketHighlightRecipe::new);
 
